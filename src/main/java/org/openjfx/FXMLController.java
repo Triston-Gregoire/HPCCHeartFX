@@ -36,6 +36,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
+import org.checkerframework.checker.units.qual.A;
 import org.hpccsystems.ws.client.HPCCFileSprayClient;
 import org.hpccsystems.ws.client.HPCCWsClient;
 import org.hpccsystems.ws.client.platform.Platform;
@@ -121,6 +122,9 @@ public class FXMLController implements Initializable {
 
     @FXML
     JFXButton removePatientButton;
+
+    @FXML
+    JFXButton queryButton;
 
 
 
@@ -260,6 +264,9 @@ public class FXMLController implements Initializable {
 
 
     }
+    public void handleQuery(ActionEvent event){
+        javafx.application.Platform.runLater(() -> uploadAndDownload());
+    }
 
     public void checkComboSelection(ActionEvent event){
         boolean isNothingSelected = patientBox.getSelectionModel().isEmpty();
@@ -271,6 +278,7 @@ public class FXMLController implements Initializable {
 
     public void checkPatientListOnSubmit(ActionEvent event){
         if (patientBox.getItems().isEmpty()){
+
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
             alert.setHeaderText("Illegal Submission");
@@ -304,6 +312,7 @@ public class FXMLController implements Initializable {
         System.out.println(value);
         //ageValueLabel.setText(String.valueOf(value));
     }
+
     
 //    @FXML
 //    private void handleButtonAction(ActionEvent event) {
@@ -319,8 +328,8 @@ public class FXMLController implements Initializable {
             ScatterChart<Number, Number> sc = new
                     ScatterChart<Number, Number>(xaxis, yaxis);
             xaxis.setLabel("Age");
-            yaxis.setLabel("depression");
-            sc.setTitle("please work");
+            yaxis.setLabel("ST Depression");
+            sc.setTitle("Age vs ST Depression");
             XYChart.Series series0 = new XYChart.Series();
             XYChart.Series series1 = new XYChart.Series();
             series0.setName("No disease");
@@ -402,10 +411,10 @@ public class FXMLController implements Initializable {
 
             HPCCWsClient connector = platform.getWsClient();
             DelimitedDataOptions options = new DelimitedDataOptions();
-            boolean isuploaded = connector.httpUploadFileToFirstHPCCLandingZone("C:\\Users\\h3hmm\\Desktop\\predictme.csv");//THIS COULD BE THE KEY
+            boolean isuploaded = connector.httpUploadFileToFirstHPCCLandingZone("C:\\Users\\h3hmm\\Desktop\\heart.csv");//THIS COULD BE THE KEY
 //            connector.uploadFileToHPCC()
             //Thread.sleep(10000);
-            connector.sprayVariableHPCCFile("predictme.csv", "~online::tcg::predictme.csv", "hthor__myeclagent", options, true, HPCCFileSprayClient.SprayVariableFormat.DFUff_csv);
+            connector.sprayVariableHPCCFile("heart.csv", "~online::tcg::heart.csv", "hthor__myeclagent", options, true, HPCCFileSprayClient.SprayVariableFormat.DFUff_csv);
             WorkunitInfo workunitInfo = new WorkunitInfo();
             workunitInfo.setECL(code);
             workunitInfo.setCluster("hthor");
@@ -704,6 +713,7 @@ public class FXMLController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        patientBox.setVisible(false);
         setSexes();
         setChestPainChoice();
         setEcgChoice();
