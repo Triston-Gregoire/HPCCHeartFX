@@ -16,12 +16,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+/*
+Forest handles the Random Forest implementation for the application
+ */
 class Forest {
     private static String modelName = "heart_disease.model";
     private RandomForest forest;
     private Instances trainingDataSet;
     private File testFile;
 
+    /*
+    reads data file at location fileName and returns the data points in an Instance collection
+
+    @param URL fileName - resource locator object which contains file path for the data file
+    @return Instances data - Collection of data instances for the model
+     */
     private Instances getDataSet(URL fileName) throws IOException{
         int classID = 13;
         ArffLoader arffLoader = new ArffLoader();
@@ -30,6 +39,11 @@ class Forest {
         data.setClassIndex(classID);
         return data;
     }
+
+    /*
+    Creates file to store the instances before they are classified
+
+     */
     private void createUnlabeledFile(){
         String header = "@relation 'heart-weka.filters.unsupervised.attribute.NumericToNominal-R2,3,6,7,9,11,13,14'\n" +
                 "\n" +
@@ -52,9 +66,9 @@ class Forest {
         System.out.println("desktop: " + desktop);
         testFile = new File(desktop.concat("/").concat("prediction_Data.arff"));
         try {
-//            if (Files.exists(testFile.toPath()))
+//            if (Files.exists(testFile.toPath())) //for testing
 //                return;
-            Files.deleteIfExists(testFile.toPath());
+            Files.deleteIfExists(testFile.toPath());//for testing
             if(testFile.createNewFile()) {
                 System.out.println("File Created");
                 BufferedWriter writer = Files.newBufferedWriter(testFile.toPath());
@@ -65,16 +79,16 @@ class Forest {
             e.printStackTrace();
         }
     }
-    private void addObservations(List<String> observations) throws IOException {
-        BufferedWriter writer;
-        writer = new BufferedWriter(new FileWriter(testFile.getPath(), true));
-        for (String patient  : observations) {
-            String output = patient.concat(",?");
-            writer.write(output);
-            writer.newLine();
-        }
-        writer.close();
-    }
+
+    /*
+
+     */
+
+    /*
+    Adds observations to the unlabeled testing data file
+
+    @param List<Object[]> observations - Collection of observations where each element of Object[i] is one of the observation's attributes
+     */
     private void addObservationArray(List<Object[]> observations) throws IOException{
         BufferedWriter writer;
         writer = new BufferedWriter(new FileWriter(testFile.getPath(), true));
@@ -91,6 +105,13 @@ class Forest {
         }
         writer.close();
     }
+
+    /*
+    classifies each observation using random forest model and returns the predictions
+
+    @param List<Object[]> observations - data instances to be classified
+    @return Instances labeled - Collection of Instances and their predictions
+     */
     Instances classify(RandomForest model, List<Object[]> observations) throws IOException {
         forest = model;
         createUnlabeledFile();
@@ -100,9 +121,7 @@ class Forest {
         Instances unlabeled = new Instances(reader);
         unlabeled.setClassIndex(unlabeled.numAttributes() - 1);
         Instances labeled = new Instances(unlabeled);
-        double[] predictions = null;
         for (int i = 0; i < unlabeled.numInstances(); i++) {
-            predictions = new double[unlabeled.numInstances()];
             double clsLabel = 0;
             try {
                 clsLabel = forest.classifyInstance(unlabeled.instance(i));
@@ -125,7 +144,7 @@ class Forest {
         try {
             String header = "";
             Path path = Paths.get(FileSystemView.getFileSystemView().getHomeDirectory().getPath().concat("/PredictionResults.txt"));
-            //Files.deleteIfExists(path);
+            //Files.deleteIfExists(path);//for testing
             if (!Files.exists(path)) {
                 header = "---Predictions---\n\nID - First Name - Last Name : Prediction\n";
             }
@@ -141,7 +160,6 @@ class Forest {
                     result = result.concat("Positive").concat("\n");
                 writer.write(result);
             }
-            //writer.newLine();
             writer.flush();
             writer.close();
         }catch (IOException ioe){
@@ -150,11 +168,23 @@ class Forest {
         return labeled;
     }
 
+    /*
+    Gets prediction model stored in application resources
+
+    return Classifier classifier - the prediction Classifier read from disk
+     */
     Classifier getModel() throws Exception {
         String absPath = new File("").getAbsolutePath().concat("/src/main/resources/").concat(modelName);
         return (Classifier) weka.core.SerializationHelper.read(absPath);
     }
 
+    /*
+    Processes the evaluation of the random forest model created
+    Also trains the model for testing purposes.
+
+    @param URL path - the resource location for the dataset to test
+    @return double[] performance - performance metrics of the classifier
+     */
     double[] process(URL path)throws Exception{
         RandomForest forest = new RandomForest();
         trainingDataSet = getDataSet(path);
@@ -165,7 +195,6 @@ class Forest {
         weka.core.SerializationHelper.write(directory + modelName, forest);
         Evaluation evaluation = new Evaluation(trainingDataSet);
         evaluation.crossValidateModel(forest, trainingDataSet, 10, new Random(1));
-        //evaluation.evaluateModel(forest, trainingDataSet);
         outputTextFile(evaluation);
 
         System.out.println("** Decision Tress Evaluation with Datasets **");
@@ -186,6 +215,11 @@ class Forest {
         return performance;
     }
 
+    /*
+    Uses populated Evaluation as output to write performance metrics to a text file
+
+    @param Evaluation evaluation - evaluation instance that has already evaluated a classifier
+     */
     private void outputTextFile(Evaluation evaluation){
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(FileSystemView.getFileSystemView().getHomeDirectory().getPath().concat("/PredictionPerformance.txt")));

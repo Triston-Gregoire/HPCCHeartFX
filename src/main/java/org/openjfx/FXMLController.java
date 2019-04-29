@@ -38,50 +38,59 @@ import weka.core.Instances;
 
 import javax.swing.filechooser.FileSystemView;
 
+/*
+The controller class for the UI and backend to interact with each other
+ */
 public class FXMLController implements Initializable {
     private String fileName = "predictme.csv";
     private String filePath;
     private double[] precision;
     private List<String> observations = new ArrayList<>();
 
+
+    //series for chart data
+    //ScatterPlot series - age vs st depression
     private XYChart.Series series0;
     private XYChart.Series series1;
 
+    //ScatterPlot series - age vs heart rate
     private XYChart.Series ageHeartSeries0;
     private XYChart.Series ageHeartSeries1;
     private XYChart.Series ageRateAllSeries;
 
+    //BarChart series - disease distribution
     private XYChart.Series barCleanSeries;
     private XYChart.Series barDiseasedSeries;
 
+    //PieChart series - gender pie
     private PieChart.Data maleSlice = new PieChart.Data("Male", 0);
     private PieChart.Data femaleSlice = new PieChart.Data("Female", 0);
 
+    //PieChart series - accuracy pie
     private PieChart.Data correctSlice = new PieChart.Data("Correct", 0);
     private PieChart.Data incorrectSlice = new PieChart.Data("Incorrect", 0);
 
+    //PieChart series - Recall pie
     private PieChart.Data truePositiveSlice = new PieChart.Data("True Positives", 0);
     private PieChart.Data falsePositiveSlice = new PieChart.Data("False Positives", 0);
     private PieChart.Data trueNegativeSlice = new PieChart.Data("True Negatives", 0);
     private PieChart.Data falseNegativeSlice = new PieChart.Data("False Negatives", 0);
 
-
+    //Series for age vs disease frequency chart
+    //not currenty used
     private XYChart.Series ageFrequencySeries0;
     private XYChart.Series ageFrequencySeries1;
 
+    //PieChart definitions
     private PieChart pieChart;
     private PieChart accuracyPie;
     private PieChart precisionPie;
 
-
+    //indicates if program is on first pass through
     boolean flag = true;
-
-
-
 
     @FXML
     private JFXTextField idField;
-
 
     @FXML
     private JFXTextField cholesterolField;
@@ -200,7 +209,13 @@ public class FXMLController implements Initializable {
         diseaseChoice.setItems(options);
     }
 
+    /*
+    Event handler for the user pressing the add button which adds a new patient to the TreeTableView
+
+    @param ActionEvent action - button click event
+     */
     public void handleAddPress(ActionEvent action){
+        //taking attributes from other fields in the UI
         String id = idField.getText();
         String fname = fNameField.getText();
         String lname = lNameField.getText();
@@ -219,6 +234,8 @@ public class FXMLController implements Initializable {
         String thal = thalBox.getValue();
         Patient newPatient = new Patient(id, fname, lname, age, sex, chestPain, restingBP, cholesterol, bloodSugar, ecg, maxBPM, exerciseInduced, peak, slope, flourosopy, thal);
 
+        //Insert attributes from UI to list
+        //ToDo: replace with Arrays.ToList(...)
         List<String> patientAttributesToTargetHeartDisease = new ArrayList<String>();
         patientAttributesToTargetHeartDisease.add(id);
         patientAttributesToTargetHeartDisease.add(fname);
@@ -237,23 +254,26 @@ public class FXMLController implements Initializable {
         patientAttributesToTargetHeartDisease.add(flourosopy);
         patientAttributesToTargetHeartDisease.add(thal);
 
+        //add Patient to UI's table view
         ObservableList<TreeItem<Patient>> currentList = patientTable.getRoot().getChildren();
         currentList.add(new TreeItem<>(newPatient));
-
         String str = String.join(", ", patientAttributesToTargetHeartDisease);
         observations.add(str);
-
-
         ObservableList patientList = patientBox.getItems();
         patientList.add(str);
     }
 
+    /*
+    Event handler for the remove button
+    @param ActionEvent action - button click event
+     */
     public void handleRemovePressed(ActionEvent event){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Dialog");
         alert.setHeaderText("Are you sure?");
         alert.setContentText("Deleting a patient can't be undone!");
 
+        //Confirm the use wants to remove the patient
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
             // ... user chose OK
@@ -265,6 +285,11 @@ public class FXMLController implements Initializable {
         }
     }
 
+    /*
+    event handler fot the updateButton
+
+    @param ActionEvent action - button click event
+     */
     public void handleUpdatePressed(ActionEvent event){
         String item = (String) patientBox.getSelectionModel().getSelectedItem();
         String[] attributes = item.split(", ");
@@ -283,16 +308,21 @@ public class FXMLController implements Initializable {
         slopeBox.setValue(attributes[12]);
         veinsBox.setValue(attributes[13]);
         thalBox.setValue(attributes[14]);
-        //heartRateSpinner.getValueFactory().setValue(Integer.parseInt(attributes[15]));
 
 
     }
+
+    //for testing
     public void handleQuery(ActionEvent event){
         Runnable task = this::uploadAndDownload;
         Thread backgroundThread = new Thread(task);
         backgroundThread.setDaemon(true);
         backgroundThread.start();
     }
+
+    /*
+    launches query to HPCC cluster as well as the update of GUI charts
+     */
     public void launchQuery(){
         Runnable task = this::uploadAndDownload;
         Thread backgroundThread = new Thread(task);
@@ -300,6 +330,9 @@ public class FXMLController implements Initializable {
         backgroundThread.start();
     }
 
+    /*
+    for testing
+     */
     public void checkComboSelection(ActionEvent event){
         boolean isNothingSelected = patientBox.getSelectionModel().isEmpty();
         if(isNothingSelected){  return; }
@@ -308,8 +341,14 @@ public class FXMLController implements Initializable {
         //submitPatientsButton.setDisable(false);
     }
 
+    /*
+    subits Table of patients to the HPCC cluster for analysis
+
+    @param ActionEvent action - button click event
+     */
     public void checkPatientListOnSubmit(ActionEvent event){
         Instances instances = null;
+        //if there are no patients, display error messages
         if ( patientTable.getRoot().getChildren().isEmpty() && patientBox.getItems().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
@@ -322,7 +361,6 @@ public class FXMLController implements Initializable {
         DirectoryChooser chooser = new DirectoryChooser();
         File file = chooser.showDialog(null);
         filePath = file.getPath();
-
 
         Forest forest = new Forest();
         try {
@@ -346,7 +384,6 @@ public class FXMLController implements Initializable {
             e.printStackTrace();
         }
 
-
         HeartWriter writer = new HeartWriter(filePath, fileName);
         try {
             writer.writeEncoded(instances);
@@ -356,10 +393,11 @@ public class FXMLController implements Initializable {
         String path  = filePath.concat("\\" + fileName);
         boolean didWork = HPCC.spray(path);
         launchQuery();
-
-
     }
 
+    /*
+    creates and adds charts to the GUI
+     */
     private void createCharts() {
         NumberAxis xaxis = new NumberAxis(30, 80, 10);
         NumberAxis yaxis = new NumberAxis(0, 7, 1);
@@ -457,6 +495,11 @@ public class FXMLController implements Initializable {
         chartGrid.add(accuracyPie, 0, 2);
         chartGrid.add(precisionPie, 1, 2);
     }
+
+    /*
+    Builds and submits queries to the HPCC cluster.
+    inserts data into the GUI's charts
+     */
     private void uploadAndDownload() {
         try {
 
@@ -486,9 +529,8 @@ public class FXMLController implements Initializable {
                     "ok;\n";
 
 
-            //Thread.sleep(10000);
 
-            if(flag == true) {
+            if(flag) {//if application is initializing
                 connector.httpUploadFileToFirstHPCCLandingZone(getClass().getResource("/heart.csv").getPath());
                 connector.sprayVariableHPCCFile("heart.csv", "~online::tcg::heart.csv", "hthor__myeclagent", options, true, HPCCFileSprayClient.SprayVariableFormat.DFUff_csv);
             }
@@ -512,13 +554,6 @@ public class FXMLController implements Initializable {
                     seriesOne.add(result);
                 }
             }
-
-
-
-
-
-
-
 
 
             String ageHeartQuery = "layout := record\n" +
@@ -664,13 +699,13 @@ public class FXMLController implements Initializable {
             ageFrequencyWU.setCluster("hthor");
             List<List<Object>> ageFrequencyResult = connector.submitECLandGetResultsList(ageFrequencyWU);
 
+            //update charts when the main thread is idle
             javafx.application.Platform.runLater(() -> {
                 if (!flag){
                     DecimalFormat df = new DecimalFormat("##.##");
                     df.setRoundingMode(RoundingMode.CEILING);
                     accuracyPie.getData().get(0).setPieValue(Double.valueOf(df.format(precision[0])));
                     accuracyPie.getData().get(1).setPieValue(Double.valueOf(df.format(precision[1])));
-
                     precisionPie.getData().get(0).setPieValue(precision[2]);
                     precisionPie.getData().get(1).setPieValue(precision[3]);
                     precisionPie.getData().get(2).setPieValue(precision[4]);
@@ -696,22 +731,6 @@ public class FXMLController implements Initializable {
                     series1.getData().add(new XYChart.Data<>(seriesOneX, seriesOneY));
                 }
 
-//                int ageHeartSeriesZeroX = -1;
-//                int ageHeartSeriesZeroY = -1;
-//                for (List<Object> objects : ageHeartSeriesZero) {
-//                    ageHeartSeriesZeroX = Integer.parseInt((String) objects.get(0));
-//                    ageHeartSeriesZeroY = Integer.parseInt((String) objects.get(1));
-//                    ageHeartSeries0.getData().add(new XYChart.Data(ageHeartSeriesZeroX, ageHeartSeriesZeroY));
-//                }
-//
-//                int ageHeartSeriesOneX = -1;
-//                int ageHeartSeriesOneY = -1;
-//                for (List<Object> objects : ageHeartSeriesOne) {
-//                    ageHeartSeriesOneX = Integer.parseInt((String) objects.get(0));
-//                    ageHeartSeriesOneY = Integer.parseInt((String) objects.get(1));
-//                    ageHeartSeries1.getData().add(new XYChart.Data<>(ageHeartSeriesOneX, ageHeartSeriesOneY));
-//                }
-
                 for (List<Object> result : ageHeartResults) {
                     int indicator = Integer.parseInt((String) result.get(2));
                     if (indicator == 0) {
@@ -725,16 +744,10 @@ public class FXMLController implements Initializable {
                 for (List<Object> objectList : genderQueryResult) {
                     int groupIndicator1 = Integer.parseInt( (String) objectList.get(0));
                     if (groupIndicator1 == 0){
-//                            femaleSlice.setPieValue(Integer.parseInt((String) objectList.get(1)));
-                        //pieChart.getData().add(new PieChart.Data( "Female", Integer.parseInt((String) objectList.get(1))));
                         pieChart.getData().get(1).setPieValue(Integer.parseInt((String) objectList.get(1)));
-                        //pieChart.getData().get(0).setName("Female");
                     }
                     else if (groupIndicator1 == 1){
-//                            maleSlice.setPieValue(Integer.parseInt((String) objectList.get(0)));
-                        //pieChart.getData().add(new PieChart.Data( "Male", Integer.parseInt((String) objectList.get(1))));
                         pieChart.getData().get(0).setPieValue(Integer.parseInt((String) objectList.get(1)));
-                        //pieChart.getData().get(1).setName("Male");
                     }
                 }
 
@@ -765,7 +778,6 @@ public class FXMLController implements Initializable {
                         if (age < 25)
                             ageFrequencySeries0.getData().add(new XYChart.Data<>("18-24", Integer.parseInt((String) row.get(2))));
                     }
-                    System.out.println(row.toString());
                 }
                 flag = false;
             });
@@ -774,6 +786,9 @@ public class FXMLController implements Initializable {
             e.printStackTrace();
         }
     }
+    /*
+    testing
+     */
     private void setTestingDefaults(){
 //        thalBox.setValue(thalBox.getItems().get(1));
 //        chestPainBox.setValue(chestPainBox.getItems().get(1));
@@ -786,10 +801,6 @@ public class FXMLController implements Initializable {
 //        bloodSugarField.setText("351");
 //        heartRateField.setText("195");
 //        oldPeakField.setText("199");
-
-
-
-
     }
 
     private void setPatientTable(){
@@ -805,11 +816,11 @@ public class FXMLController implements Initializable {
         JFXTreeTableColumn<Patient, String> lnameColumn = new JFXTreeTableColumn<>("LastName");
         lnameColumn.setPrefWidth(125);
         lnameColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().lname);
-
+        //Age
         JFXTreeTableColumn<Patient, String> ageColumn = new JFXTreeTableColumn<>("Age");
         ageColumn.setPrefWidth(50);
         ageColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().age);
-
+        //Gender
         JFXTreeTableColumn<Patient, String> sexColumn = new JFXTreeTableColumn<>("Sex");
         sexColumn.setPrefWidth(50);
         sexColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().sex);
@@ -818,52 +829,52 @@ public class FXMLController implements Initializable {
         JFXTreeTableColumn<Patient, String>  chestColumn = new JFXTreeTableColumn<>("Chest Pain");
         chestColumn.setPrefWidth(125);
         chestColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().chestPain);
-
+        //Blood Pressure
         JFXTreeTableColumn<Patient, String> bloodPressureColumn = new JFXTreeTableColumn<>("Blood Pressure");
         bloodPressureColumn.setPrefWidth(175);
         bloodPressureColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().bloodPressure);
-
+        //Cholesterol
         JFXTreeTableColumn<Patient, String> cholesterolColumn = new JFXTreeTableColumn<>("Cholesterol");
         cholesterolColumn.setPrefWidth(125);
         cholesterolColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().cholesterol);
-
+        //BloodSugar
         JFXTreeTableColumn<Patient, String> bloodSugarColumn = new JFXTreeTableColumn<>("Blood Sugar");
         bloodSugarColumn.setPrefWidth(175);
         bloodSugarColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().bloodSugar);
-
+        //ECG Result
         JFXTreeTableColumn<Patient, String> ecgColumn = new JFXTreeTableColumn<>("ECG Result");
         ecgColumn.setPrefWidth(125);
         ecgColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().ecg);
-
+        //BPM
         JFXTreeTableColumn<Patient, String> heartRateColumn = new JFXTreeTableColumn<>("BPM");
         heartRateColumn.setPrefWidth(75);
         heartRateColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().heartRate);
-
+        //Exercise Induced
         JFXTreeTableColumn<Patient, String> exerciseColumn = new JFXTreeTableColumn<>("Exercise Induced");
         exerciseColumn.setPrefWidth(125);
         exerciseColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().exerciseInduced);
-
+        //ST Depression
         JFXTreeTableColumn<Patient, String> peakColumn = new JFXTreeTableColumn<>("ST Depression");
         peakColumn.setPrefWidth(125);
         peakColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().oldPeak);
-
+        //Slope
         JFXTreeTableColumn<Patient, String> slopeColumn = new JFXTreeTableColumn<>("Slope");
         slopeColumn.setPrefWidth(125);
         slopeColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().slope);
-
+        //Flourosopy
         JFXTreeTableColumn<Patient, String> flourosopyColumn = new JFXTreeTableColumn<>("Flourosopy");
         flourosopyColumn.setPrefWidth(75);
         flourosopyColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().flourosopy);
-
+        //Thal
         JFXTreeTableColumn<Patient, String> thalColumn = new JFXTreeTableColumn<>("Thal");
         thalColumn.setPrefWidth(75);
         thalColumn.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().thal);
-
+        //Heart Disease
         JFXTreeTableColumn<Patient, String> heartDisease = new JFXTreeTableColumn<>("Heart Disease");
         heartDisease.setPrefWidth(125);
         heartDisease.setCellValueFactory(patientStringCellDataFeatures -> patientStringCellDataFeatures.getValue().getValue().disease);
 
-
+        //
         fnameColumn.setCellFactory((TreeTableColumn<Patient, String> param) -> new GenericEditableTreeTableCell<>(
                 new TextFieldEditorBuilder()));
         fnameColumn.setOnEditCommit((TreeTableColumn.CellEditEvent<Patient, String> t) -> t.getTreeTableView()
@@ -878,6 +889,7 @@ public class FXMLController implements Initializable {
 
         ObservableList<Patient> patients = FXCollections.observableArrayList();
 
+        //adds columns to tableview
         TreeItem<Patient> root = new RecursiveTreeItem<>(patients, RecursiveTreeObject::getChildren);
         patientTable.getColumns().setAll(
                 idColumn,
@@ -901,13 +913,13 @@ public class FXMLController implements Initializable {
         patientTable.setRoot(root);
         patientTable.setShowRoot(false);
 
+        //Adds pateints to tableview for testing and demo
         Patient patient1 = new Patient("304", "Matthew", "Lusk", "42", "Male", "Typical Angina", "140", "226", "100", "Abnormality", "178", "No", "0", "Downsloping", "Zero", "Previously Fixed Defect");
         Patient patient2 = new Patient("305", "Willie", "Thompson", "55", "Male", "Atypical Angina", "130", "262", "115", "Abnormality", "155", "No", "0", "Downsloping", "Zero", "Previously Fixed Defect");
         Patient patient3 = new Patient("306", "Jennifer", "Landis", "43", "Female", "Non-Anginal", "122", "213", "112", "Abnormality", "165", "No", "0.2", "Flat", "Zero", "Previously Fixed Defect");
         Patient patient4 = new Patient("307", "Benjamin", "McKinley", "62", "Male", "Atypical Angina", "120", "281", "86", "Normal", "103", "No","1.4", "Flat", "One", "Reversible Defect");
         Patient patient5 = new Patient("308", "Henry", "Thurman", "57", "Male", "Atypical Angina", "154", "232", "119", "Normal", "164", "No", "0", "Downsloping", "One", "Previously Fixed Defect");
         Patient patient6 = new Patient("309", "Priscilla", "Alvarez", "57", "Female", "Atypical Angina", "130", "236", "98", "Normal", "174", "No", "0", "Flat", "One", "Previously Fixed Defect");
-
         ObservableList<TreeItem<Patient>> defaultPatients = patientTable.getRoot().getChildren();
         observations.add(patient1.toCSV());
         observations.add(patient2.toCSV());
@@ -921,9 +933,12 @@ public class FXMLController implements Initializable {
         defaultPatients.add(new TreeItem<>(patient4));
         defaultPatients.add(new TreeItem<>(patient5));
         defaultPatients.add(new TreeItem<>(patient6));
-
     }
 
+    /*
+    Initialized connection to HPCC cluster
+
+     */
     private void initHPCC(){
         Platform platform = Platform.get("http", "192.168.56.101", 8010, "hpccdemo", "hpccdemo");
         HPCCWsClient connector = null;
@@ -942,6 +957,7 @@ public class FXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         patientBox.setVisible(false);
+        //set default selected choices for some GUI elements
         setSexes();
         setChestPainChoice();
         setEcgChoice();
@@ -954,12 +970,12 @@ public class FXMLController implements Initializable {
         //comment out when running for real
         setTestingDefaults();
         setPatientTable();
-        initHPCC();
 
+        //initialize HPCC connection and query file on HPCC
+        initHPCC();
         Runnable task = this::uploadAndDownload;
         Thread backgroundThread = new Thread(task);
         backgroundThread.setDaemon(true);
         backgroundThread.start();
-
     }
 }

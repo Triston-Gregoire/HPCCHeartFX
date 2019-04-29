@@ -7,9 +7,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-
+/*
+Parser handles reading from the csv files for their use in the application
+*/
 public class Parser {
 
+    /*
+    reads the file pointed to by parameter path into memory
+
+    @param String path - location of csv file to read
+    @return List<Object[]> document - content of csv file red into memory
+     */
     public static List<Object[]> read(String path){
         CsvParserSettings parserSettings = new CsvParserSettings();
         CsvParser parser = new CsvParser(parserSettings);
@@ -30,7 +38,6 @@ public class Parser {
             for (int j = 0; j < row.length; j++) {
                 newRow[j] = String.valueOf(row[j]);
             }
-            //String[] newRow = (String[]) Arrays.copyOf(row, row.length-1);
             document.add(newRow);
             i++;
         }

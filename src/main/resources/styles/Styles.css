@@ -1,3 +1,14 @@
+
+/*
+Propeties for groups of GUI elements (such as text size for all buttons)
+    are set here.
+
+I mostly set colors, font, and text sizes here
+ */
+
+/*
+include Google's roboto mono font for the GUI to use
+ */
 @font-face {
     src: url('RobotoMono-Regular.ttf');
 

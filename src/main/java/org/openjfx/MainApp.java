@@ -7,7 +7,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
+/*
+Launches the scene
+ */
 public class MainApp extends Application {
 
     @Override
@@ -16,10 +18,9 @@ public class MainApp extends Application {
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
         
-        stage.setTitle("JavaFX and Maven");
+        stage.setTitle("HeartFX");
         stage.setScene(scene);
         stage.show();
-        System.out.println("HELLO MOTTO");
     }
 
     /**
