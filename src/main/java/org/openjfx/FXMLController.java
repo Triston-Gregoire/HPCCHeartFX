@@ -488,9 +488,10 @@ public class FXMLController implements Initializable {
 
             //Thread.sleep(10000);
 
-            if(flag == true)
+            if(flag == true) {
                 connector.httpUploadFileToFirstHPCCLandingZone(getClass().getResource("/heart.csv").getPath());
                 connector.sprayVariableHPCCFile("heart.csv", "~online::tcg::heart.csv", "hthor__myeclagent", options, true, HPCCFileSprayClient.SprayVariableFormat.DFUff_csv);
+            }
             WorkunitInfo workunitInfo = new WorkunitInfo();
             workunitInfo.setECL(code);
             workunitInfo.setCluster("hthor");
