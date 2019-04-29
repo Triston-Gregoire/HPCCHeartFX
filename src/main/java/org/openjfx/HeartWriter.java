@@ -2,36 +2,43 @@ package org.openjfx;
 
 import com.univocity.parsers.csv.CsvWriter;
 import com.univocity.parsers.csv.CsvWriterSettings;
+import weka.core.Instance;
+import weka.core.Instances;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
 public class HeartWriter {
-    String destination;
-    String file;
-    List<Object> listToWrite;
-    List<Object[]> encodedList;
+    private String destination;
+    private String file;
+    private List<Object> listToWrite;
     public HeartWriter(String diskLocaiton,String fileName, List<Object> input){
         destination = diskLocaiton;
         file = fileName;
         listToWrite = new ArrayList<>(input);
     }
 
-    public HeartWriter(String diskLocation, String fileName){
+    HeartWriter(String diskLocation, String fileName){
         destination = diskLocation;
         file = fileName;
     }
 
-    public void writeEncoded(List<Object[]> input) throws IOException {
+    void writeEncoded(Instances instances) throws IOException {
 //        input.removeIf(Objects::isNull);
 //        input.removeAll(Collections.singletonList(null));
 //        input.removeAll(Arrays.asList("", null));
+        List<Object[]> instanceStrings = new ArrayList<>();
+        for (Instance instance : instances)
+            instanceStrings.add(instance.toString().split(","));
+
+
+        List<Object[]> oldFile = Parser.read(getClass().getResource("/heart.csv").getPath());
+        oldFile.addAll(instanceStrings);
         List<String> headerList = new ArrayList<>();
-        headerList.add("PatientID");
-        headerList.add("FirstName");
-        headerList.add("LastName");
+//        headerList.add("PatientID");
+//        headerList.add("FirstName");
+//        headerList.add("LastName");
         headerList.add("Age");
         headerList.add("Sex");
         headerList.add("ChestPainType");
@@ -45,6 +52,7 @@ public class HeartWriter {
         headerList.add("Slope");
         headerList.add("FlourosopyColoredVeins");
         headerList.add("Thal");
+        headerList.add("Target");
 
         StringBuilder sb = new StringBuilder(destination);
         sb.append("\\");
@@ -54,7 +62,11 @@ public class HeartWriter {
         FileWriter fileWriter = new FileWriter(outputPath);
         CsvWriter writer = new CsvWriter(fileWriter, new CsvWriterSettings());
         writer.writeHeaders(headerList);
-        writer.writeRowsAndClose(input);
+        writer.writeRowsAndClose(oldFile);
+        //writer.flush();
+        writer.close();
+        fileWriter.close();
+
     }
 
     public void writeCSV() throws IOException {
@@ -94,5 +106,4 @@ public class HeartWriter {
         writer.writeHeaders(headerList);
         writer.writeRowsAndClose(rows);
     }
-
 }

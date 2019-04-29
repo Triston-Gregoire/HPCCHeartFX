@@ -7,12 +7,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public class Coder {
-    public static List<Object[]> encode(List<Object> input){
+class Coder {
+    static List<Object[]> encode(List<String> input){
         List<Object[]> cleanList = new ArrayList<>();
         Object[] encodedAttributes = new String[20];
-        for (Object o : input) {
-            String[] attributes = ((String) o).split(", ");
+        for (String o : input) {
+            String[] attributes = o.split(", ");
             encodedAttributes[0] = attributes[0];
             encodedAttributes[1] = attributes[1];
             encodedAttributes[2] = attributes[2];
@@ -76,12 +76,17 @@ public class Coder {
     private static String mapECG(String ecg){
         assert(ecg != null);
         String result = null;
-        if ("Normal".equals(ecg))
-            result = "0";
-        else if ("Abnormality".equals(ecg))
-            result = "1";
-        else if ("Probable/Definite Ventricular Hypertrophy".equals(ecg))
-            result = "2";
+        switch (ecg) {
+            case "Normal":
+                result = "0";
+                break;
+            case "Abnormality":
+                result = "1";
+                break;
+            case "Probable/Definite Ventricular Hypertrophy":
+                result = "2";
+                break;
+        }
         return result;
     }
 

@@ -1,15 +1,18 @@
+@font-face {
+    src: url('RobotoMono-Regular.ttf');
 
+}
 .jfx-tab-pane:top .depth-container  .tab-selected-line {
-    -fx-background-color: #FDBB30;
+    -fx-background-color: #ffc425;
 }
 .jfx-tab-pane .tab:selected .tab-label  {
     -fx-font-weight: normal;
     -fx-text-fill: #ffffff;
-    -fx-font-size: 16;
-    -fx-background-color:#0B1315;
+    -fx-background-color:rgb(35, 31, 32);
+    -fx-font: 20px "Roboto Mono"
 }
 .tab-header-background{
-    -fx-background-color:#FDBB30;
+    -fx-background-color:#ffc425;
 
 }
 .depth-container{
@@ -20,7 +23,79 @@
     -fx-stroke : RED;
 }
 
+.jfx-text-field {
+    -fx-prompt-text-fill: WHITE;
+    -jfx-focus-color: #ffc425;
+    -jfx-unfocus-color: WHITE;
+    -fx-text-fill: white;
+    -fx-font: 18px "Roboto Mono";
+}
+.jfx-label{
+    -fx-text-fill: white;
+    -fx-font: 20px "Roboto Mono";
+}
+.mylabel{
+    -fx-text-fill: white;
+    -fx-font: 20px "Roboto Mono";
+}
+.combo-box{
+    -fx-text-fill: white;
+}
+.combo-box .cell{
+    -fx-text-fill: white;
+    -fx-background-color:  rgb(35, 31, 32);
+    -fx-font: 18px "Roboto Mono";
+}
+.combo-box-popup .list-view .list-cell:filled:selected, .combo-box-popup .list-view .list-cell:filled:selected:hover
+{
+    -fx-background: -fx-accent;
+    -fx-background-color: #ffc425;
+    -fx-text-fill: -fx-selection-bar-text;
+}
+.combo-box-base:hover
+{
+    -fx-color: white;
+}
+.grid {
+    /* 1 pixel border around the top and right of the grid: */
+    /-fx-background-color: cell-border-color, cell-color ;
+    -fx-background-insets: 0, 1 1 0 0 ;
+    -fx-padding: 1 ;
+}
+.table-cell{
+    -fx-background-color: white;
+}
+.tree-table-view{
+    -fx-font: 18px "Roboto Mono";
+}
 
+.chart-title {
+    -fx-font: 20px "Roboto Mono";
+}
+
+.default-color0.chart-bar{ -fx-bar-fill: #ffc425}
+.default-color1.chart-bar{ -fx-bar-fill: #231f20}
+.default-color0.chart-pie{ -fx-pie-color: #ffc425}
+.default-color1.chart-pie{ -fx-pie-color: #231f20}
+.default-color2.chart-pie{ -fx-pie-color: #c79400}
+.default-color3.chart-pie{ -fx-pie-color: #b0b3b2}
+
+.default-color0.chart-symbol{
+    -fx-background-color: #ffc425;
+    -fx-background-radius: 0;
+}
+.default-color1.chart-symbol{
+    -fx-background-color:#231f20;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px;
+}
+.chart-series-line{-fx-stroke-width: 2px;}
+.default-color0.chart-series-line{
+    -fx-stroke: #ffc425;
+}
+.default-color0.chart-line-symbol{
+    -fx-background-color: #ffc425, #231f20;
+}
 
 
 

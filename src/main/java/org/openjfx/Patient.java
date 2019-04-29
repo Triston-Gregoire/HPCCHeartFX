@@ -25,6 +25,7 @@ public class Patient extends RecursiveTreeObject<Patient> {
     StringProperty slope;
     StringProperty flourosopy;
     StringProperty thal;
+    StringProperty disease;
 
 
 
@@ -47,27 +48,31 @@ public class Patient extends RecursiveTreeObject<Patient> {
         this.slope = new SimpleStringProperty(slope);
         this.flourosopy = new SimpleStringProperty(flourosopy);
         this.thal = new SimpleStringProperty(thal);
+        this.disease = new SimpleStringProperty("?");
     }
 
     public List<String> toList(){
-        List<String> result = new ArrayList<String>(Arrays.asList(
-                id.toString(),
-                fname.toString(),
-                lname.toString(),
-                age.toString(),
-                sex.toString(),
-                chestPain.toString(),
-                bloodPressure.toString(),
-                cholesterol.toString(),
-                bloodSugar.toString(),
-                ecg.toString(),
-                heartRate.toString(),
-                exerciseInduced.toString(),
-                oldPeak.toString(),
-                slope.toString(),
-                flourosopy.toString(),
-                thal.toString()
+        return new ArrayList<String>(Arrays.asList(
+                id.get(),
+                fname.get(),
+                lname.get(),
+                age.get(),
+                sex.get(),
+                chestPain.get(),
+                bloodPressure.get(),
+                cholesterol.get(),
+                bloodSugar.get(),
+                ecg.get(),
+                heartRate.get(),
+                exerciseInduced.get(),
+                oldPeak.get(),
+                slope.get(),
+                flourosopy.get(),
+                thal.get(),
+                disease.get()
         ));
-        return result;
+    }
+    public String toCSV(){
+        return String.join(", ", toList());
     }
 }

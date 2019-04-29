@@ -27,7 +27,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" styleClass=".vbox" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.openjfx.FXMLController">
+<VBox maxHeight="880.0" maxWidth="1200.0" prefHeight="880.0" prefWidth="1200.0" styleClass=".vbox" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.openjfx.FXMLController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -70,66 +70,66 @@
     </MenuBar>
       <JFXTabPane maxHeight="1.7976931348623157E308" prefHeight="1400.0" prefWidth="900.0">
          <tabs>
-          <Tab text="Untitled Tab 1">
+          <Tab text="Data Entry">
                <content>
-                <SplitPane dividerPositions="0.3151447661469933" focusTraversable="true" prefHeight="165.0" prefWidth="900.0">
+                <SplitPane dividerPositions="0.386" focusTraversable="true" prefHeight="165.0" prefWidth="900.0">
                   <items>
-                    <ScrollPane maxWidth="315.0" pannable="true" prefHeight="-1.0" prefWidth="315.0">
+                    <ScrollPane maxWidth="450.0" pannable="true" prefHeight="-1.0" prefWidth="315.0">
                       <content>
-                        <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="235.0">
+                        <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="450.0" style="-fx-background-color: rgb(35, 31, 32);">
                           <children>
-                            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="Patient Information" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
+                            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" styleClass="jfx-label" text="Patient Information" textAlignment="CENTER" textFill="WHITE" wrapText="false">
                                        <font>
                                           <Font size="18.0" fx:id="x12" />
                                        </font></Label>
-                                    <Separator layoutX="-9.0" layoutY="40.0" prefHeight="4.0" prefWidth="221.0" />
+                                    <Separator layoutX="-9.0" layoutY="40.0" prefHeight="4.0" prefWidth="269.0" />
                                     <Label layoutX="14.0" layoutY="112.0" />
                                     <Label layoutX="14.0" layoutY="171.0" />
                                     <Label layoutX="14.0" layoutY="53.0" />
-                                    <JFXTextField fx:id="idField" focusColor="#fdbb30" labelFloat="true" layoutX="14.0" layoutY="71.0" promptText="Patient ID#" text="256" unFocusColor="#0b1315" />
-                                    <Label alignment="CENTER" layoutX="14.0" layoutY="239.0" style="&#10;" text="Arrtibutes" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
+                                    <JFXTextField fx:id="idField" focusColor="#fdbb30" labelFloat="true" layoutX="18.0" layoutY="71.0" promptText="Patient ID#" unFocusColor="#588b97" />
+                                    <JFXTextField fx:id="fNameField" focusColor="WHITE" labelFloat="true" layoutX="18.0" layoutY="130.0" prefHeight="32.0" prefWidth="166.0" promptText="Enter First Name" styleClass="jfx-text-field" unFocusColor="WHITE" />
+                                    <JFXTextField fx:id="lNameField" labelFloat="true" layoutX="18.0" layoutY="189.0" prefHeight="32.0" prefWidth="168.0" promptText="Enter Last Name" />
+                                    <JFXTextField fx:id="ageField" labelFloat="true" layoutX="18.0" layoutY="291.0" promptText="Age" />
+                                    <JFXComboBox fx:id="sexCombo" focusColor="WHITE" labelFloat="true" layoutX="18.0" layoutY="351.0" promptText="Sex" styleClass="jfx-text-field" unFocusColor="WHITE" />
+                                    <JFXComboBox fx:id="chestPainBox" focusColor="WHITE" labelFloat="true" layoutX="14.0" layoutY="407.0" promptText="Chest Pain Type" styleClass="jfx-text-field" unFocusColor="WHITE" />
+                                    <JFXTextField fx:id="bloodPressureField" labelFloat="true" layoutX="14.0" layoutY="465.0" prefHeight="32.0" prefWidth="239.0" promptText="Resting Blood Pressure" />
+                                    <JFXTextField fx:id="cholesterolField" labelFloat="true" layoutX="14.0" layoutY="522.0" promptText="Cholesterol" />
+                                    <Label alignment="CENTER" layoutX="14.0" layoutY="239.0" style="&#10;" styleClass="jfx-label" text="Arrtibutes" textAlignment="CENTER" textFill="WHITE" wrapText="false">
                                        <font>
                                           <Font size="18.0" fx:id="x11" />
                                        </font>
                                     </Label>
-                                    <Separator layoutY="264.0" prefHeight="4.0" prefWidth="221.0" />
+                                    <Separator layoutY="264.0" prefHeight="4.0" prefWidth="260.0" />
                                     <Label layoutX="14.0" layoutY="273.0" />
                                     <Label layoutX="14.0" layoutY="331.0" />
                                     <Label layoutX="14.0" layoutY="389.0" />
                                     <Label layoutX="14.0" layoutY="447.0" />
-                                    <JFXTextField fx:id="cholesterolField" labelFloat="true" layoutX="14.0" layoutY="522.0" promptText="Cholesterol" />
                                     <Label layoutX="14.0" layoutY="505.0" />
                                     <Label layoutX="14.0" layoutY="563.0" />
                                     <JFXTextField fx:id="bloodSugarField" labelFloat="true" layoutX="14.0" layoutY="580.0" promptText="Blood Sugar" />
                                     <Label layoutX="14.0" layoutY="621.0" />
-                                    <JFXComboBox fx:id="ecgCombo" layoutX="14.0" layoutY="638.0" promptText="ECG Result" />
+                                    <JFXComboBox fx:id="ecgCombo" layoutX="14.0" layoutY="638.0" prefHeight="35.0" prefWidth="185.0" promptText="ECG Result" styleClass="jfx-text-field" />
                                     <Label layoutX="14.0" layoutY="679.0" />
                                     <JFXTextField fx:id="heartRateField" labelFloat="true" layoutX="14.0" layoutY="696.0" promptText="Max Heart Rate" />
                                     <Label layoutX="14.0" layoutY="737.0" />
-                                    <JFXComboBox fx:id="exerciseCombo" labelFloat="true" layoutX="14.0" layoutY="754.0" promptText="Exercised Induced" />
+                                    <JFXComboBox fx:id="exerciseCombo" labelFloat="true" layoutX="14.0" layoutY="754.0" promptText="Exercised Induced" styleClass="jfx-text-field" />
                                     <Label layoutX="14.0" layoutY="795.0" />
-                                    <JFXTextField fx:id="oldPeakField" labelFloat="true" layoutX="14.0" layoutY="812.0" promptText="Old Peak" />
+                                    <JFXTextField fx:id="oldPeakField" labelFloat="true" layoutX="14.0" layoutY="812.0" prefHeight="32.0" prefWidth="130.0" promptText="ST Depression" />
                                     <Label layoutX="14.0" layoutY="853.0" />
-                                    <JFXComboBox fx:id="slopeBox" labelFloat="true" layoutX="14.0" layoutY="870.0" promptText="Slope" />
+                                    <JFXComboBox fx:id="slopeBox" labelFloat="true" layoutX="14.0" layoutY="870.0" promptText="Slope" styleClass="jfx-text-field" />
                                     <Label layoutX="14.0" layoutY="911.0" />
                                     <Label layoutX="14.0" layoutY="969.0" />
-                                    <JFXComboBox fx:id="thalBox" labelFloat="true" layoutX="14.0" layoutY="986.0" promptText="Thal" />
-                                    <Label layoutX="14.0" layoutY="1027.0" text="Heart Disease" />
-                                    <ChoiceBox fx:id="diseaseChoice" layoutX="14.0" layoutY="1044.0" prefWidth="150.0" />
-                                    <JFXButton fx:id="addButton" buttonType="RAISED" layoutX="14.0" layoutY="1085.0" onAction="#handleAddPress" style="-fx-background-color: #F9A825; -fx-text-fill: #ffffff;" text="Add" />
-                                    <Button layoutX="74.0" layoutY="1085.0" mnemonicParsing="false" text="Clear" />
-                                    <JFXTextField fx:id="fNameField" labelFloat="true" layoutX="14.0" layoutY="130.0" promptText="Enter first name" text="Anastasia" />
-                                    <JFXTextField fx:id="lNameField" labelFloat="true" layoutX="14.0" layoutY="189.0" promptText="Enter Last Name" text="Balanovskaya" />
-                                    <JFXTextField fx:id="ageField" labelFloat="true" layoutX="14.0" layoutY="291.0" promptText="Age" text="23" />
-                                    <JFXComboBox fx:id="sexCombo" labelFloat="true" layoutX="14.0" layoutY="351.0" promptText="Sex" />
-                                    <JFXComboBox fx:id="chestPainBox" labelFloat="true" layoutX="14.0" layoutY="407.0" promptText="Chest Pain Type" />
-                                    <JFXTextField fx:id="bloodPressureField" labelFloat="true" layoutX="14.0" layoutY="465.0" promptText="Resting Blood Pressure" />
-                                    <JFXComboBox fx:id="veinsBox" labelFloat="true" layoutX="14.0" layoutY="928.0" promptText="# of Viens colored by flourosopy" />
+                                    <JFXComboBox fx:id="veinsBox" labelFloat="true" layoutX="14.0" layoutY="928.0" promptText="Veins Colored by Flourosopy" styleClass="jfx-text-field" />
+                                    <JFXComboBox fx:id="thalBox" labelFloat="true" layoutX="14.0" layoutY="986.0" promptText="Thal" styleClass="jfx-text-field" />
+                                    <Label layoutX="14.0" layoutY="1027.0" />
+                                    <ChoiceBox fx:id="diseaseChoice" layoutX="14.0" layoutY="1044.0" prefWidth="150.0" visible="false" />
+                                    <JFXButton fx:id="addButton" buttonType="RAISED" layoutX="14.0" layoutY="1085.0" onAction="#handleAddPress" style="-fx-background-color: #ffc425; -fx-text-fill: #0B1315;" text="Add" />
+                                    <Button layoutX="74.0" layoutY="1085.0" mnemonicParsing="false" style="-fx-background-color: #ffc425; -fx-text-fill: #0B1315;" text="Clear" />
                           </children>
                         </AnchorPane>
                       </content>
                     </ScrollPane>
-                    <AnchorPane>
+                    <AnchorPane style="-fx-background-color: rgb(35, 31, 32);">
                       <children>
                         <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Master" textAlignment="CENTER" wrapText="false">
                           <font>
@@ -139,10 +139,10 @@
                             <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
                           </textFill>
                         </Label>
-                              <JFXTreeTableView fx:id="patientTable" layoutX="16.0" layoutY="58.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="700.0" AnchorPane.bottomAnchor="58.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="58.0" />
-                              <JFXButton fx:id="submitPatientsButton" buttonType="RAISED" layoutX="143.0" layoutY="478.0" maxWidth="75.0" onAction="#checkPatientListOnSubmit" prefWidth="75.0" ripplerFill="#0b1314" style="-fx-background-color: #FDBB30; -fx-text-fill: #0B1315;" text="Submit List" AnchorPane.bottomAnchor="12.399999999999977" AnchorPane.rightAnchor="393.8" />
-                              <JFXButton fx:id="updatePatientButton" buttonType="RAISED" layoutX="268.0" layoutY="479.0" maxWidth="75.0" onAction="#handleUpdatePressed" prefWidth="75.0" style="-fx-background-color: #FDBB30; -fx-text-fill: #0B1315;" text="Update" AnchorPane.bottomAnchor="11.399999999999977" AnchorPane.rightAnchor="268.8" />
-                              <JFXButton buttonType="RAISED" layoutX="387.0" layoutY="478.0" maxWidth="75.0" prefHeight="26.0" prefWidth="74.0" style="-fx-background-color: #FDBB30; -fx-text-fill:: #0B1315;" text="Remove" AnchorPane.bottomAnchor="11.600000000000001" AnchorPane.rightAnchor="150.6" />
+                              <JFXTreeTableView fx:id="patientTable" layoutX="16.0" layoutY="58.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="700.0" styleClass="table-cell" AnchorPane.bottomAnchor="58.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="58.0" />
+                              <JFXButton fx:id="submitPatientsButton" buttonType="RAISED" layoutX="143.0" layoutY="478.0" maxWidth="75.0" onAction="#checkPatientListOnSubmit" prefWidth="75.0" ripplerFill="#0b1314" style="-fx-background-color: #ffc425; -fx-text-fill: #0B1315;" text="Submit List" AnchorPane.bottomAnchor="12.399999999999977" AnchorPane.leftAnchor="15.0" />
+                              <JFXButton fx:id="updatePatientButton" buttonType="RAISED" layoutX="268.0" layoutY="479.0" maxWidth="75.0" onAction="#handleUpdatePressed" prefWidth="75.0" style="-fx-background-color: #FDBB30; -fx-text-fill: #0B1315;" text="Update" AnchorPane.bottomAnchor="11.399999999999977" AnchorPane.leftAnchor="215.0" />
+                              <JFXButton fx:id="removeButton" buttonType="RAISED" layoutX="387.0" layoutY="478.0" maxWidth="75.0" onAction="#handleRemovePressed" prefHeight="26.0" prefWidth="74.0" style="-fx-background-color: #FDBB30; -fx-text-fill: #0B1315;" text="Remove" AnchorPane.bottomAnchor="11.600000000000001" AnchorPane.leftAnchor="115.0" />
                               <ComboBox fx:id="patientBox" layoutX="42.0" layoutY="32.0" onAction="#checkComboSelection" prefHeight="26.0" prefWidth="202.0" />
                       </children>
                     </AnchorPane>
@@ -150,30 +150,41 @@
                 </SplitPane>
                </content>
             </Tab>
-          <Tab text="Untitled Tab 2">
+          <Tab text="Visualization">
                <content>
-                  <SplitPane dividerPositions="0.21380846325167038" prefHeight="160.0" prefWidth="200.0">
+                  <SplitPane dividerPositions="0.15" prefHeight="160.0" prefWidth="200.0">
                     <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: rgb(35, 31, 32);">
                            <children>
-                              <JFXButton fx:id="queryButton" buttonType="RAISED" layoutX="24.0" layoutY="14.0" onAction="#handleQuery" style="-fx-background-color: #FDBB30; -fx-text-fill: #0B1315;" text="Query Cluster" />
+                              <JFXButton fx:id="queryButton" buttonType="RAISED" layoutX="24.0" layoutY="14.0" onAction="#handleQuery" style="-fx-background-color: #FDBB30; -fx-text-fill: #0B1315;" text="Query Cluster" visible="false" />
                            </children></AnchorPane>
-                      <AnchorPane fx:id="tab2Pane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                      <AnchorPane fx:id="tab2Pane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="250.0" style="-fx-background-color: rgb(35, 31, 32);">
                            <children>
-                              <GridPane fx:id="chartGrid" gridLinesVisible="true" prefWidth="862.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                              <GridPane fx:id="chartGrid" gridLinesVisible="true" prefHeight="516.0" prefWidth="703.2" style="-fx-background-color: white;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
                                 <columnConstraints>
                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                 </columnConstraints>
                                 <rowConstraints>
-                                  <RowConstraints maxHeight="242.39999084472657" minHeight="10.0" prefHeight="240.00002746582032" vgrow="ALWAYS" />
-                                  <RowConstraints maxHeight="256.99999999999994" minHeight="10.0" prefHeight="246.3999725341797" vgrow="ALWAYS" />
+                                  <RowConstraints maxHeight="325.0" minHeight="10.0" prefHeight="325.0" vgrow="ALWAYS" />
+                                  <RowConstraints maxHeight="325.0" minHeight="10.0" prefHeight="325.0" vgrow="ALWAYS" />
+                                    <RowConstraints maxHeight="325.0" minHeight="10.0" prefHeight="325.0" vgrow="ALWAYS" />
                                 </rowConstraints>
                               </GridPane>
                            </children></AnchorPane>
                     </items>
                   </SplitPane>
                </content></Tab>
+            <Tab text="Untitled Tab">
+               <content>
+                  <SplitPane dividerPositions="0.298" prefHeight="160.0" prefWidth="200.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: rgb(35, 31, 32);" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: ffffff;" />
+                    </items>
+                  </SplitPane>
+               </content>
+            </Tab>
          </tabs>
       </JFXTabPane>
     <HBox id="HBox" alignment="CENTER_LEFT" maxHeight="20.0" minHeight="20.0" prefHeight="20.0" prefWidth="900.0" VBox.vgrow="NEVER">
